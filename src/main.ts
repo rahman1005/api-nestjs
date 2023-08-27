@@ -20,6 +20,7 @@ async function bootstrap() {
     root: join(__dirname, '..', 'public'),
     prefix: '/public/',
   });
+  
   app.setViewEngine({
     engine: {
       handlebars: require('handlebars'),
