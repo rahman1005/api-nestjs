@@ -30,12 +30,14 @@ export class AuthController {
         }
     }
 
+    @HttpCode(HttpStatus.OK)
     @Post('request-verification-account')
+    @UseInterceptors(TransformInterceptor)
     async requestVerificationAccount(@Body() body: VerificationAccountDto) {
         try {
-            return this.authService.verificationAccount(body);
+            return this.authService.requestVerificationAccount(body);
         } catch (error) {
-            console.log('error', error.message);
+            throw error;
         }
     }
 
@@ -46,7 +48,7 @@ export class AuthController {
         try {
             return req.user;
         } catch (error) {
-            console.log('error', error.message)
+            throw error;
         }
     }
 }

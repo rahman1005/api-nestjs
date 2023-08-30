@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import { MailingService } from 'src/mailing/mailing.service';
 import { User } from 'src/user/schemas/user.schema';
 import { UserService } from 'src/user/user.service';
 import { jwtConstants } from './constants';
@@ -8,7 +9,11 @@ import { LoginAuthDto, RegisterAuthDto, VerificationAccountDto } from './dto/aut
 
 @Injectable({})
 export class AuthService {
-    constructor(private userService: UserService, private jwtService: JwtService) { }
+    constructor(
+        private userService: UserService,
+        private jwtService: JwtService,
+        private mailingService: MailingService
+    ) { }
 
     async register(data: RegisterAuthDto) {
         const user: User = await this.userService.findByEmail(data.email);
@@ -41,7 +46,20 @@ export class AuthService {
         return { user, token };
     }
 
-    async verificationAccount(data: VerificationAccountDto) {
+    async requestVerificationAccount(data: VerificationAccountDto) {
+        const isMatch = this.userService.findByEmail(data.email);
+        if (!isMatch) {
+            throw new HttpException('user not found', HttpStatus.BAD_REQUEST);
+        }
+        await this.mailingService.send();
+        return { email: data.email }
+    }
 
+    async verificationAccount(data: VerificationAccountDto) {
+        const isMatch = this.userService.findByEmail(data.email);
+        if (!isMatch) {
+            throw new HttpException('user not found', HttpStatus.BAD_REQUEST);
+        }
+        return { email: data.email }
     }
 }
