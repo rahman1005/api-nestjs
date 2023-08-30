@@ -9,7 +9,7 @@
     "build": "nest build",
     "reinstall": "rm -rf ./node_modules && rm -rf yarn.lock && rm -rf ./dist && yarn install",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "yarn cache clean && yarn reinstall && yarn build && yarn start:prod",
+    "start": "sudo apt-get install g++ && sudo apt-get install -y build-essential python && yarn add node-pre-gyp && yarn cache clean && yarn reinstall && yarn build && yarn start:prod",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
