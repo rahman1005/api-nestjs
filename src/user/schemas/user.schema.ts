@@ -25,6 +25,12 @@ export class User {
     @Prop({ required: false })
     isVerified?: Date;
 
+    @Prop({ required: false })
+    otp?: string;
+
+    @Prop({ required: false, minlength: 1, maxlength: 1 })
+    sex?: number;
+
     @Prop()
     age?: number;
 }

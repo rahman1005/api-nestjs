@@ -1,3 +1,4 @@
+import multipart from '@fastify/multipart';
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
@@ -11,16 +12,17 @@ async function bootstrap() {
     AppModule,
     new FastifyAdapter({ logger: true })
   );
+  await app.register(multipart);
 
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
   app.useGlobalInterceptors(new LoggingInterceptor());
   app.useGlobalFilters(new HttpExceptionFilter());
-  
+
   app.useStaticAssets({
     root: join(__dirname, '..', 'public'),
     prefix: '/public/',
   });
-  
+
   app.setViewEngine({
     engine: {
       handlebars: require('handlebars'),

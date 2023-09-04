@@ -1,13 +1,13 @@
 import { Body, Controller, Get, HttpCode, HttpStatus, Post, Request, UseGuards, UseInterceptors } from '@nestjs/common';
 import { TransformInterceptor } from 'src/interceptors/transform.interceptor';
+import { UserService } from 'src/user/user.service';
 import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
-import { LoginAuthDto, RegisterAuthDto, VerificationAccountDto } from './dto/auth.dto';
-
+import { LoginAuthDto, RegisterAuthDto, RequestVerificationAccountDto, VerificationAccountDto } from './dto/auth.dto';
 @Controller('auth')
 export class AuthController {
 
-    constructor(private authService: AuthService) { }
+    constructor(private authService: AuthService, private userService: UserService) { }
 
     @Post('register')
     @UseInterceptors(TransformInterceptor)
@@ -33,9 +33,20 @@ export class AuthController {
     @HttpCode(HttpStatus.OK)
     @Post('request-verification-account')
     @UseInterceptors(TransformInterceptor)
-    async requestVerificationAccount(@Body() body: VerificationAccountDto) {
+    async requestVerificationAccount(@Body() body: RequestVerificationAccountDto) {
         try {
             return this.authService.requestVerificationAccount(body);
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    @HttpCode(HttpStatus.OK)
+    @Post('verification-account')
+    @UseInterceptors(TransformInterceptor)
+    async verificationAccount(@Body() body: VerificationAccountDto) {
+        try {
+            return this.authService.verificationAccount(body);
         } catch (error) {
             throw error;
         }
@@ -46,7 +57,7 @@ export class AuthController {
     @UseInterceptors(TransformInterceptor)
     async getProfile(@Request() req) {
         try {
-            return req.user;
+            return this.authService.profile(req.user);
         } catch (error) {
             throw error;
         }

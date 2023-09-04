@@ -7,10 +7,11 @@ import { AppService } from './app.service';
 import { ArticleModule } from './article/article.module';
 import { AuthModule } from './auth/auth.module';
 import { BookmarkModule } from './bookmark/bookmark.module';
+import { FileModule } from './file/file.module';
 import { JobModule } from './job/job.module';
+import { MailingModule } from './mailing/mailing.module';
 import { ProductModule } from './product/product.module';
 import { UserModule } from './user/user.module';
-import { MailingModule } from './mailing/mailing.module';
 
 @Module({
   imports: [
@@ -25,7 +26,9 @@ import { MailingModule } from './mailing/mailing.module';
         port: 15249,
       },
     }),
+    ArticleModule,
     AuthModule,
+    FileModule,
     UserModule,
     BookmarkModule,
     ProductModule,

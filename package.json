@@ -9,11 +9,12 @@
     "build": "nest build",
     "reinstall": "rm -rf ./node_modules && rm -rf yarn.lock && rm -rf ./dist && yarn install",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "sudo apt-get install g++ && sudo apt-get install -y build-essential python && yarn add node-pre-gyp && yarn cache clean && yarn reinstall && yarn build && yarn start:prod",
+    "start": "yarn cache clean && yarn reinstall && yarn build && yarn start:prod",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+    "restart": "yarn reinstall && yarn start",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
@@ -21,6 +22,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@fastify/multipart": "^7.7.3",
     "@fastify/static": "^6.10.2",
     "@fastify/view": "^8.0.0",
     "@nestjs-modules/mailer": "^1.9.1",

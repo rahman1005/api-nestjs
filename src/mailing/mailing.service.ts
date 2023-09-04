@@ -1,5 +1,6 @@
 import { MailerService } from '@nestjs-modules/mailer';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { MailingSendInterface } from './interfaces';
 
 @Injectable()
 export class MailingService {
@@ -7,12 +8,13 @@ export class MailingService {
         private readonly mailerService: MailerService,
     ) { }
 
-    async send() {
+    async send({ to, from, subject, template, data }: MailingSendInterface) {
         await this.mailerService.sendMail({
-            to: 'novizarhadisaputra@gmail.com',
-            from: 'developer.healthbeing@gmail.com',
-            subject: 'Testing Nest MailerModule',
-            template: 'test',
+            to: to,
+            from: from,
+            subject: subject,
+            template: template,
+            context: data
         }).then((success) => {
             console.log('success', success);
         }).catch((error) => {

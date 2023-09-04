@@ -5,8 +5,8 @@ import { MailingService } from 'src/mailing/mailing.service';
 import { User } from 'src/user/schemas/user.schema';
 import { UserService } from 'src/user/user.service';
 import { jwtConstants } from './constants';
-import { LoginAuthDto, RegisterAuthDto, VerificationAccountDto } from './dto/auth.dto';
-
+import { LoginAuthDto, RegisterAuthDto, RequestVerificationAccountDto, VerificationAccountDto } from './dto/auth.dto';
+import { JwtPayloadInterface } from './interfaces/auth.interface';
 @Injectable({})
 export class AuthService {
     constructor(
@@ -24,7 +24,7 @@ export class AuthService {
     }
 
     async login(data: LoginAuthDto) {
-        const user: User = await this.userService.findByEmail(data.email, ['_id', 'email', 'password']);
+        const user: User = await this.userService.findByEmail(data.email, ['_id', 'email', 'password', 'isVerified', 'phone']);
         if (!user) {
             throw new HttpException('user not found', HttpStatus.BAD_REQUEST);
         }
@@ -38,28 +38,48 @@ export class AuthService {
             throw new HttpException('user not verified', HttpStatus.BAD_REQUEST);
         }
 
-        const payload = { sub: user._id, email: user.email, phone: user.phone };
+        const payload: JwtPayloadInterface = { _id: user._id, email: user.email, phone: user.phone };
         const token = await this.jwtService.signAsync(payload, {
             privateKey: jwtConstants.secret
         });
 
-        return { user, token };
+        return { token };
     }
 
-    async requestVerificationAccount(data: VerificationAccountDto) {
-        const isMatch = this.userService.findByEmail(data.email);
+    async requestVerificationAccount(data: RequestVerificationAccountDto) {
+        const isMatch = await this.userService.findByEmail(data.email);
         if (!isMatch) {
             throw new HttpException('user not found', HttpStatus.BAD_REQUEST);
         }
-        await this.mailingService.send();
+        const otp = Math.round(Math.random() * 999999).toString();
+        await this.userService.updateByEmail(data.email, { otp })
+        await this.mailingService.send({
+            to: [data.email],
+            from: 'developer.healthbeing@gmail.com',
+            subject: 'Verification Email',
+            template: 'verification',
+            data: { otp, email: data.email }
+        });
         return { email: data.email }
     }
 
-    async verificationAccount(data: VerificationAccountDto) {
-        const isMatch = this.userService.findByEmail(data.email);
-        if (!isMatch) {
-            throw new HttpException('user not found', HttpStatus.BAD_REQUEST);
+    async verificationAccount(data: VerificationAccountDto): Promise<User> {
+        const isExist = await this.userService.findByEmail(data.email, ['email', 'otp']);
+        if (!isExist) {
+            throw new HttpException('credential not valid', HttpStatus.BAD_REQUEST);
         }
-        return { email: data.email }
+        if (!isExist.otp || isExist.otp !== data.otp) {
+            throw new HttpException('otp not valid', HttpStatus.BAD_REQUEST);
+        }
+
+        await this.userService.updateByEmail(data.email, {
+            isVerified: new Date(),
+            otp: ''
+        });
+        return await this.userService.findByEmail(data.email);
+    }
+
+    async profile(data: JwtPayloadInterface): Promise<User> {
+        return await this.userService.findById(data._id, ['_id', 'email', 'firstName', 'lastName', 'phone', 'age']);
     }
 }

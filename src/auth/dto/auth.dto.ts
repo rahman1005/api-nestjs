@@ -26,7 +26,15 @@ export class LoginAuthDto {
     password: string;
 }
 
+export class RequestVerificationAccountDto {
+    @IsEmail()
+    email: string;
+}
+
 export class VerificationAccountDto {
     @IsEmail()
     email: string;
+
+    @IsNotEmpty()
+    otp: string;
 }
