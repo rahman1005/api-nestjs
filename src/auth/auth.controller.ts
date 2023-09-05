@@ -1,14 +1,14 @@
 import { Body, Controller, Get, HttpCode, HttpStatus, Post, Request, UseGuards, UseInterceptors } from '@nestjs/common';
 import { TransformInterceptor } from 'src/interceptors/transform.interceptor';
-import { UserService } from 'src/user/user.service';
 import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
 import { LoginAuthDto, RegisterAuthDto, RequestVerificationAccountDto, VerificationAccountDto } from './dto/auth.dto';
-@Controller('auth')
+@Controller('api/auth')
 export class AuthController {
 
-    constructor(private authService: AuthService, private userService: UserService) { }
+    constructor(private authService: AuthService) { }
 
+    @HttpCode(HttpStatus.CREATED)
     @Post('register')
     @UseInterceptors(TransformInterceptor)
     async register(@Body() body: RegisterAuthDto) {

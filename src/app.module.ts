@@ -11,7 +11,9 @@ import { FileModule } from './file/file.module';
 import { JobModule } from './job/job.module';
 import { MailingModule } from './mailing/mailing.module';
 import { ProductModule } from './product/product.module';
+import { SubscriptionModule } from './subscription/subscription.module';
 import { UserModule } from './user/user.module';
+import { PackageModule } from './package/package.module';
 
 @Module({
   imports: [
@@ -27,6 +29,7 @@ import { UserModule } from './user/user.module';
       },
     }),
     ArticleModule,
+    SubscriptionModule,
     AuthModule,
     FileModule,
     UserModule,
@@ -35,6 +38,8 @@ import { UserModule } from './user/user.module';
     ArticleModule,
     JobModule,
     MailingModule,
+    SubscriptionModule,
+    PackageModule,
   ],
   controllers: [AppController],
   providers: [AppService],

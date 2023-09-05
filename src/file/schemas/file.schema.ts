@@ -2,8 +2,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Types } from 'mongoose';
 
-@Schema()
-export class File {
+@Schema({ timestamps: true })export class File {
     @Prop({ required: true })
     _id: Types.ObjectId;
 
