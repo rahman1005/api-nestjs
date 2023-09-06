@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import * as bcrypt from 'bcrypt';
 import { Model, Types } from 'mongoose';
 import { CreateUserDto } from './dto/user.dto';
-import { UpdateUser } from './interfaces/user';
+import { UpdateUser } from './interfaces/user.interface';
 import { User } from './schemas/user.schema';
 
 @Injectable()
@@ -23,7 +23,7 @@ export class UserService {
             firstName: createUserDto.firstName,
             lastName: createUserDto.lastName,
             age: createUserDto.age,
-            otp: Math.round(Math.random() * 999999).toString()
+            otp: Math.round(Math.random() * 999999).toString(),
         }
         const createdUser = new this.userModel(body);
         await createdUser.save();

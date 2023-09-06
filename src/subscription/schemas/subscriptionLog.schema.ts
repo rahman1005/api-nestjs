@@ -10,6 +10,9 @@ export class SubscriptionLog {
     @Prop({ required: true })
     subscriptionId: Types.ObjectId;
 
+    @Prop({ required: false })
+    corporateId?: Types.ObjectId;
+
     @Prop({ required: true })
     picName: string;
 

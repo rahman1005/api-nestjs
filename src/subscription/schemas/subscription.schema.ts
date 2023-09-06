@@ -8,6 +8,9 @@ export class Subscription {
     @Prop({ required: true })
     _id: Types.ObjectId;
 
+    @Prop({ required: false })
+    corporateId?: Types.ObjectId;
+
     @Prop({ required: true })
     picName: string;
 

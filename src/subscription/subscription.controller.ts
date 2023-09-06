@@ -8,7 +8,7 @@ export class SubscriptionController {
     constructor(private subscriptionService: SubscriptionService) { }
 
     @HttpCode(HttpStatus.CREATED)
-    @Post('/')
+    @Post('store')
     @UseInterceptors(TransformInterceptor)
     async create(@Body() createSubscriptionDto: CreateSubscriptionDto) {
         try {

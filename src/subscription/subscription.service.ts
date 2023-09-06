@@ -3,13 +3,14 @@ import { InjectModel } from '@nestjs/mongoose';
 import * as bcrypt from 'bcrypt';
 import { Model, Types } from 'mongoose';
 import { PackageService } from 'src/package/package.service';
+import { CreateSubscriptionDto } from './dto/subscription.dto';
 import { SubscriptionStatus } from './interfaces/subscription.interface';
 import { Subscription } from './schemas/subscription.schema';
 @Injectable()
 export class SubscriptionService {
     constructor(@InjectModel(Subscription.name) private subscriptionModel: Model<Subscription>, private packageService: PackageService) { }
 
-    async create(createSubscriptionDto: Subscription) {
+    async create(createSubscriptionDto: CreateSubscriptionDto) {
         const packages = await this.packageService.findById(createSubscriptionDto.packageId);
         if (!packages) {
             throw new Error('package not found');

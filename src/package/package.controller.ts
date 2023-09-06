@@ -3,12 +3,12 @@ import { TransformInterceptor } from 'src/interceptors/transform.interceptor';
 import { CreatePackageDto, ListPackageDto } from './dto/package.dto';
 import { PackageService } from './package.service';
 
-@Controller('package')
+@Controller('api/package')
 export class PackageController {
     constructor(private packageService: PackageService) { }
 
     @HttpCode(HttpStatus.CREATED)
-    @Post('package')
+    @Post('store')
     @UseInterceptors(TransformInterceptor)
     async create(@Body() createPackageDto: CreatePackageDto) {
         try {
@@ -19,7 +19,7 @@ export class PackageController {
     }
 
     @HttpCode(HttpStatus.OK)
-    @Get('package')
+    @Get('list')
     @UseInterceptors(TransformInterceptor)
     async list(@Query() listPackageDto: ListPackageDto) {
         try {
