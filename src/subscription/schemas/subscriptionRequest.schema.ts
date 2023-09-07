@@ -1,15 +1,14 @@
 
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Types } from 'mongoose';
-import { SubscriptionStatus } from '../interfaces/subscription.interface';
 
 @Schema({ timestamps: true })
-export class Subscription {
+export class SubscriptionRequest {
     @Prop({ required: true })
     _id: Types.ObjectId;
 
-    @Prop({ required: false })
-    corporateId?: Types.ObjectId;
+    @Prop({ required: true })
+    corporateName?: string;
 
     @Prop({ required: true })
     picName: string;
@@ -27,20 +26,11 @@ export class Subscription {
     price: number;
 
     @Prop({ required: true })
-    status: SubscriptionStatus;
-
-    @Prop({ required: true })
-    serverKey: string;
-
-    @Prop({ required: true })
-    clientKey: string;
-
-    @Prop({ required: true })
     startDate: Date;
 
     @Prop({ required: true })
     endDate: Date;
 }
 
-export type SubscriptionDocument = HydratedDocument<Subscription>;
-export const SubscriptionSchema = SchemaFactory.createForClass(Subscription);
+export type SubscriptionRequestDocument = HydratedDocument<SubscriptionRequest>;
+export const SubscriptionRequestSchema = SchemaFactory.createForClass(SubscriptionRequest);

@@ -25,6 +25,9 @@ export class Article {
 
     @Prop({ required: true })
     status: ArticleStatus;
+
+    @Prop({ required: true })
+    createdBy: Types.ObjectId;
 }
 
 export type ArticleDocument = HydratedDocument<Article>;

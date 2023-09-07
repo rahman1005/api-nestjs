@@ -1,6 +1,6 @@
 import { Body, Controller, HttpCode, HttpStatus, Post, UseInterceptors } from '@nestjs/common';
 import { TransformInterceptor } from 'src/interceptors/transform.interceptor';
-import { CreateSubscriptionDto } from './dto/subscription.dto';
+import { CreateSubscriptionDto, SendRequestSubscriptionDto } from './dto/subscription.dto';
 import { SubscriptionService } from './subscription.service';
 
 @Controller('api/subscription')
@@ -13,6 +13,17 @@ export class SubscriptionController {
     async create(@Body() createSubscriptionDto: CreateSubscriptionDto) {
         try {
             return this.subscriptionService.create(createSubscriptionDto);
+        } catch (error) {
+            console.log('error', error)
+        }
+    }
+
+    @HttpCode(HttpStatus.CREATED)
+    @Post('send-request')
+    @UseInterceptors(TransformInterceptor)
+    async sendRequest(@Body() sendRequestDto: SendRequestSubscriptionDto) {
+        try {
+            return this.subscriptionService.sendRequest(sendRequestDto);
         } catch (error) {
             console.log('error', error)
         }

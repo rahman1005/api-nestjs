@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
+import { JwtPayloadInterface } from 'src/auth/interfaces/auth.interface';
 import { CreateAppointmentDto } from './dto/appointment.dto';
 import { ListAppointmentDto, StatusAppointment } from './interfaces/appointment.interface';
 import { Appointment } from './schemas/appointment.schema';
@@ -9,7 +10,7 @@ import { Appointment } from './schemas/appointment.schema';
 export class AppointmentService {
     constructor(@InjectModel(Appointment.name) private appointmentModel: Model<Appointment>) { }
 
-    async create(createAppointmentDto: CreateAppointmentDto): Promise<Appointment> {
+    async create(createAppointmentDto: CreateAppointmentDto, user: JwtPayloadInterface): Promise<Appointment> {
         const appointmentId = new Types.ObjectId();
         const provider = "";
         if (!provider) {
@@ -27,7 +28,7 @@ export class AppointmentService {
         return await this.findById(createdAppointment._id, ['_id']);
     }
 
-    async all(query: ListAppointmentDto) {
+    async all(query: ListAppointmentDto, user: JwtPayloadInterface) {
         return await this.appointmentModel.find();
     }
 

@@ -1,8 +1,3 @@
-// import { Module } from '@nestjs/common';
-
-// @Module({})
-// export class FileModule {}
-
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { FileService } from './file.service';
