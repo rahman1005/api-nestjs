@@ -63,6 +63,39 @@ export class AuthService {
         return { email: data.email }
     }
 
+    async requestForgetPasswordAccount(data: RequestVerificationAccountDto) {
+        const isMatch = await this.userService.findByEmail(data.email);
+        if (!isMatch) {
+            throw new HttpException('user not found', HttpStatus.BAD_REQUEST);
+        }
+        const otp = Math.round(Math.random() * 999999).toString();
+        await this.userService.updateByEmail(data.email, { otp })
+        await this.mailingService.send({
+            to: [data.email],
+            from: 'developer.healthbeing@gmail.com',
+            subject: 'Verification Forget Password',
+            template: 'verification',
+            data: { otp, email: data.email }
+        });
+        return { email: data.email }
+    }
+
+    async verificationForgetPassword(data: VerificationAccountDto): Promise<boolean> {
+        const isExist = await this.userService.findByEmail(data.email, ['email', 'otp']);
+        if (!isExist) {
+            throw new HttpException('credential not valid', HttpStatus.BAD_REQUEST);
+        }
+        if (!isExist.otp || isExist.otp !== data.otp) {
+            return false;
+        }
+
+        await this.userService.updateByEmail(data.email, {
+            isVerified: new Date(),
+            otp: ''
+        });
+        return true;
+    }
+
     async verificationAccount(data: VerificationAccountDto): Promise<User> {
         const isExist = await this.userService.findByEmail(data.email, ['email', 'otp']);
         if (!isExist) {

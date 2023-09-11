@@ -42,6 +42,28 @@ export class AuthController {
     }
 
     @HttpCode(HttpStatus.OK)
+    @Post('request-forget-password')
+    @UseInterceptors(TransformInterceptor)
+    async requestForgetPassword(@Body() body: RequestVerificationAccountDto) {
+        try {
+            return this.authService.requestForgetPasswordAccount(body);
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    @HttpCode(HttpStatus.OK)
+    @Post('verification-forget-password')
+    @UseInterceptors(TransformInterceptor)
+    async verificationForgetPassword(@Body() body: VerificationAccountDto) {
+        try {
+            return this.authService.verificationForgetPassword(body);
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    @HttpCode(HttpStatus.OK)
     @Post('verification-account')
     @UseInterceptors(TransformInterceptor)
     async verificationAccount(@Body() body: VerificationAccountDto) {
