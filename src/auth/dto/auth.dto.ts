@@ -1,5 +1,5 @@
 
-import { IsEmail, IsNotEmpty, IsPhoneNumber } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsPhoneNumber, MinLength } from 'class-validator';
 
 export class RegisterAuthDto {
     @IsNotEmpty()
@@ -37,4 +37,20 @@ export class VerificationAccountDto {
 
     @IsNotEmpty()
     otp: string;
+
+    @IsNotEmpty()
+    hash: string;
+}
+
+export class ResetPasswordDto {
+    @IsNotEmpty()
+    hash: string;
+
+    @IsNotEmpty()
+    @MinLength(8)
+    newPassword: string;
+
+    @IsNotEmpty()
+    @MinLength(8)
+    newPasswordConfirm: string;
 }

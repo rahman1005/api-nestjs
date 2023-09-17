@@ -3,31 +3,32 @@ import { InjectModel } from '@nestjs/mongoose';
 import * as bcrypt from 'bcrypt';
 import { Model, Types } from 'mongoose';
 import { CreateUserDto } from './dto/user.dto';
-import { UpdateUser } from './interfaces/user.interface';
+import { CreateUserInterface, UpdateUser } from './interfaces/user.interface';
 import { User } from './schemas/user.schema';
 
 @Injectable()
 export class UserService {
     constructor(@InjectModel(User.name) private userModel: Model<User>) { }
 
-    async create(createUserDto: CreateUserDto): Promise<User> {
+    async create(createUserDto: CreateUserDto): Promise<CreateUserInterface> {
         const saltRounds: number = 10;
         const salt = await bcrypt.genSalt(saltRounds);
-        const hash = await bcrypt.hash(createUserDto.password, salt);
+        const password = await bcrypt.hash(createUserDto.password, salt);
         const userId = new Types.ObjectId();
         const body: User = {
             _id: userId,
             email: createUserDto.email,
             phone: createUserDto.phone,
-            password: hash,
+            password: password,
             firstName: createUserDto.firstName,
             lastName: createUserDto.lastName,
             age: createUserDto.age,
-            otp: Math.round(Math.random() * 999999).toString(),
         }
         const createdUser = new this.userModel(body);
         await createdUser.save();
-        return await this.findById(createdUser._id, ['_id']);
+        const user = await this.findById(createdUser._id, ['_id']);
+        const hash = userId + body.email + body.phone + Math.round(Math.random() * 999999).toString();
+        return { user, hash };
     }
 
     async findById(id: Types.ObjectId, fields: Array<keyof User> = ['_id']): Promise<User> {

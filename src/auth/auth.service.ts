@@ -51,14 +51,13 @@ export class AuthService {
         if (!isMatch) {
             throw new HttpException('user not found', HttpStatus.BAD_REQUEST);
         }
-        const otp = Math.round(Math.random() * 999999).toString();
-        await this.userService.updateByEmail(data.email, { otp })
+
         await this.mailingService.send({
             to: [data.email],
             from: 'developer.healthbeing@gmail.com',
             subject: 'Verification Email',
             template: 'verification',
-            data: { otp, email: data.email }
+            data: { email: data.email }
         });
         return { email: data.email }
     }
@@ -69,7 +68,7 @@ export class AuthService {
             throw new HttpException('user not found', HttpStatus.BAD_REQUEST);
         }
         const otp = Math.round(Math.random() * 999999).toString();
-        await this.userService.updateByEmail(data.email, { otp })
+        // await this.userService.updateByEmail(data.email, { otp })
         await this.mailingService.send({
             to: [data.email],
             from: 'developer.healthbeing@gmail.com',
@@ -81,34 +80,20 @@ export class AuthService {
     }
 
     async verificationForgetPassword(data: VerificationAccountDto): Promise<boolean> {
-        const isExist = await this.userService.findByEmail(data.email, ['email', 'otp']);
+        const isExist = await this.userService.findByEmail(data.email, ['email']);
         if (!isExist) {
             throw new HttpException('credential not valid', HttpStatus.BAD_REQUEST);
         }
-        if (!isExist.otp || isExist.otp !== data.otp) {
-            return false;
-        }
 
-        await this.userService.updateByEmail(data.email, {
-            isVerified: new Date(),
-            otp: ''
-        });
         return true;
     }
 
     async verificationAccount(data: VerificationAccountDto): Promise<User> {
-        const isExist = await this.userService.findByEmail(data.email, ['email', 'otp']);
+        const isExist = await this.userService.findByEmail(data.email, ['email']);
         if (!isExist) {
             throw new HttpException('credential not valid', HttpStatus.BAD_REQUEST);
         }
-        if (!isExist.otp || isExist.otp !== data.otp) {
-            throw new HttpException('otp not valid', HttpStatus.BAD_REQUEST);
-        }
-
-        await this.userService.updateByEmail(data.email, {
-            isVerified: new Date(),
-            otp: ''
-        });
+        await this.userService.updateByEmail(data.email, { isVerified: new Date() });
         return await this.userService.findByEmail(data.email);
     }
 

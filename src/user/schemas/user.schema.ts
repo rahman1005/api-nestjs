@@ -1,7 +1,7 @@
 
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Types, } from 'mongoose';
-import { Blood, Sex } from '../interfaces/user.interface';
+import { BloodUser, SexUser } from '../interfaces/user.interface';
 
 @Schema({ timestamps: true })
 export class User {
@@ -26,11 +26,8 @@ export class User {
     @Prop({ required: false })
     isVerified?: Date;
 
-    @Prop({ required: false })
-    otp?: string;
-
     @Prop({ required: false, minlength: 1, maxlength: 1 })
-    sex?: Sex;
+    sex?: SexUser;
 
     @Prop()
     age?: number;
@@ -39,7 +36,7 @@ export class User {
     height?: number;
 
     @Prop({ minlength: 1, maxlength: 2 })
-    blood?: Blood;
+    blood?: BloodUser;
 
 }
 
