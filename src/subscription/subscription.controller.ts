@@ -1,5 +1,5 @@
 import { Body, Controller, HttpCode, HttpStatus, Post, UseInterceptors } from '@nestjs/common';
-import { TransformInterceptor } from 'src/interceptors/transform.interceptor';
+import { TransformInterceptor } from 'src/common/interceptors/transform.interceptor';
 import { CreateSubscriptionDto, SendRequestSubscriptionDto } from './dto/subscription.dto';
 import { SubscriptionService } from './subscription.service';
 

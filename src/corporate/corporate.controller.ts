@@ -1,6 +1,6 @@
 import { Body, Controller, Get, HttpCode, HttpStatus, Post, Query, UseGuards, UseInterceptors } from '@nestjs/common';
 import { AuthGuard } from 'src/auth/auth.guard';
-import { TransformInterceptor } from 'src/interceptors/transform.interceptor';
+import { TransformInterceptor } from 'src/common/interceptors/transform.interceptor';
 import { CorporateService } from './corporate.service';
 import { CreateCorporateDto } from './dto/corporate.dto';
 import { ListCorporateDto } from './interfaces/corporate.interface';

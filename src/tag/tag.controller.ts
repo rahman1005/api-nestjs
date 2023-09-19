@@ -3,20 +3,20 @@ import { AuthGuard } from 'src/auth/auth.guard';
 import { JwtPayloadInterface } from 'src/auth/interfaces/auth.interface';
 import { TransformInterceptor } from 'src/common/interceptors/transform.interceptor';
 import { User } from 'src/user/decorators/user.decorator';
-import { ArticleService } from './article.service';
-import { CreateArticleDto } from './dto/article.dto';
+import { CreateTagDto } from './dto/tag.dto';
+import { TagService } from './tag.service';
 
-@Controller('article')
-export class ArticleController {
-    constructor(private articleService: ArticleService) { }
+@Controller('tag')
+export class TagController {
+    constructor(private articleService: TagService) { }
 
     @HttpCode(HttpStatus.CREATED)
     @UseGuards(AuthGuard)
     @Post('store')
     @UseInterceptors(TransformInterceptor)
-    async create(@Body() createArticleDto: CreateArticleDto, @User() user: JwtPayloadInterface) {
+    async create(@Body() createTagDto: CreateTagDto, @User() user: JwtPayloadInterface) {
         try {
-            return this.articleService.create(createArticleDto, user);
+            return this.articleService.create(createTagDto, user);
         } catch (error) {
             console.log('error', error)
         }
